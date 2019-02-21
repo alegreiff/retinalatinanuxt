@@ -1,6 +1,6 @@
-.editorconfig
+/.editorconfig
 .nuxt
-README.md
+/README.md
 assets/
 components/
 /dist/
