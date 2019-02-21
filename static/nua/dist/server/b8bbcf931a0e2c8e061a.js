@@ -1,0 +1,2 @@
+exports.ids=[8],exports.modules={217:function(t,e,o){"use strict";o.r(e);var r={mounted(){this.tituloSeccion("Los países"),console.log(this.$route.params.id)}},c=o(10);var component=Object(c.a)(r,function(){var t=this.$createElement;return(this._self._c||t)("div",[this._ssrNode("<h1 data-v-b9f3625a>Paíse</h1>")])},[],!1,function(t){},"b9f3625a","1c7c0def");e.default=component.exports}};
+//# sourceMappingURL=b8bbcf931a0e2c8e061a.js.map

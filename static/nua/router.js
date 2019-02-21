@@ -11,6 +11,7 @@ const _47f4fb1a = () => interopDefault(import('../../pages/Estadisticas/base.vue
 const _ffe2ac2a = () => interopDefault(import('../../pages/Estadisticas/paises.vue' /* webpackChunkName: "pages/Estadisticas/paises" */))
 const _600f1170 = () => interopDefault(import('../../pages/Estadisticas/peliculas.vue' /* webpackChunkName: "pages/Estadisticas/peliculas" */))
 const _3a3101c0 = () => interopDefault(import('../../pages/Estadisticas/publicadas.vue' /* webpackChunkName: "pages/Estadisticas/publicadas" */))
+const _6257054e = () => interopDefault(import('../../pages/Pais/_id/index.vue' /* webpackChunkName: "pages/Pais/_id/index" */))
 const _2f568a52 = () => interopDefault(import('../../pages/index.vue' /* webpackChunkName: "pages/index" */))
 
 Vue.use(Router)
@@ -109,6 +110,10 @@ export function createRouter() {
       path: "/Estadisticas/publicadas",
       component: _3a3101c0,
       name: "Estadisticas-publicadas"
+    }, {
+      path: "/Pais/:id?",
+      component: _6257054e,
+      name: "Pais-id"
     }, {
       path: "/",
       component: _2f568a52,
