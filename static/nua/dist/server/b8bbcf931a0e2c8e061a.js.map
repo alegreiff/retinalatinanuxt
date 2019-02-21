@@ -1,1 +1,0 @@
-{"version":3,"file":"b8bbcf931a0e2c8e061a.js","sources":["webpack:///./pages/Pais/_id/index.vue"],"sourcesContent":["var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',[_vm._ssrNode(\"<h1 data-v-b9f3625a>Paíse</h1>\")])}\nvar staticRenderFns = []\n\nexport { render, staticRenderFns }"],"mappings":"AAAA","sourceRoot":""}
