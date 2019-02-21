@@ -6,9 +6,8 @@ import '../../assets/style/app.styl'
 import '../../assets/sass/estilos.scss'
 
 import _6f6c098b from '../../layouts/default.vue'
-import _6c566366 from '../../layouts/THEerror.vue'
 
-const layouts = { "_default": _6f6c098b,"_THEerror": _6c566366 }
+const layouts = { "_default": _6f6c098b }
 
 export default {
   head: {"title":"inforetinalatina2019 : 0.7.1","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"Estadísticas Retina Latina 2019"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Roboto:300,400,500,700|Material+Icons"}],"script":[{"src":"https:\u002F\u002Fwww.gstatic.com\u002Fcharts\u002Floader.js"},{"src":"\u002FcargaGoogleMap.js"}],"style":[]},
