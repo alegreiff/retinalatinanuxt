@@ -1,0 +1,13 @@
+.editorconfig
+.nuxt
+README.md
+assets/
+components/
+/dist/
+layouts/
+middleware/
+node_modules/
+pages/
+plugins/
+store/
+yarn.lock
