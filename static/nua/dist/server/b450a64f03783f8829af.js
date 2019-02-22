@@ -1,2 +1,0 @@
-exports.ids=[11],exports.modules={213:function(t,e,l){"use strict";l.r(e);var n={mounted(){this.tituloSeccion("Inspírate, ve")}},r=l(10),o=l(11),c=l.n(o),x=l(39),f=l(40),component=Object(r.a)(n,function(){var t=this.$createElement,e=this._self._c||t;return e("v-layout",[e("v-flex",{attrs:{"text-xs-center":""}},[e("h1",[this._v("Hola ke ase")])])],1)},[],!1,null,null,"a334cf3e");e.default=component.exports;c()(component,{VFlex:x.a,VLayout:f.a})}};
-//# sourceMappingURL=b450a64f03783f8829af.js.map
