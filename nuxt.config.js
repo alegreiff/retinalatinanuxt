@@ -26,7 +26,14 @@ module.exports = {
         rel: 'stylesheet',
         href:
           'https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Material+Icons'
-      }
+      },
+      {
+        rel: 'stylesheet',
+        href:
+          'https://fonts.googleapis.com/css?family=Days+One'
+      },
+      
+
     ],
     script: [
       { src: "https://www.gstatic.com/charts/loader.js" },
