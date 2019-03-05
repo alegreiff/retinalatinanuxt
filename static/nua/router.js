@@ -10,6 +10,7 @@ const _42cd87f9 = () => interopDefault(import('../../pages/Administrador/salidas
 const _47f4fb1a = () => interopDefault(import('../../pages/Estadisticas/base.vue' /* webpackChunkName: "pages/Estadisticas/base" */))
 const _ffe2ac2a = () => interopDefault(import('../../pages/Estadisticas/paises.vue' /* webpackChunkName: "pages/Estadisticas/paises" */))
 const _600f1170 = () => interopDefault(import('../../pages/Estadisticas/peliculas.vue' /* webpackChunkName: "pages/Estadisticas/peliculas" */))
+const _aa989f7a = () => interopDefault(import('../../pages/Estadisticas/peliculasmes.vue' /* webpackChunkName: "pages/Estadisticas/peliculasmes" */))
 const _3a3101c0 = () => interopDefault(import('../../pages/Estadisticas/publicadas.vue' /* webpackChunkName: "pages/Estadisticas/publicadas" */))
 const _6257054e = () => interopDefault(import('../../pages/Pais/_id/index.vue' /* webpackChunkName: "pages/Pais/_id/index" */))
 const _2f568a52 = () => interopDefault(import('../../pages/index.vue' /* webpackChunkName: "pages/index" */))
@@ -106,6 +107,10 @@ export function createRouter() {
       path: "/Estadisticas/peliculas",
       component: _600f1170,
       name: "Estadisticas-peliculas"
+    }, {
+      path: "/Estadisticas/peliculasmes",
+      component: _aa989f7a,
+      name: "Estadisticas-peliculasmes"
     }, {
       path: "/Estadisticas/publicadas",
       component: _3a3101c0,
