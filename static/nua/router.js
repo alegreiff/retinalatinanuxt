@@ -4,6 +4,7 @@ import { interopDefault } from './utils'
 
 const _1381a140 = () => interopDefault(import('../../pages/Administrador/index.vue' /* webpackChunkName: "pages/Administrador/index" */))
 const _3409365a = () => interopDefault(import('../../pages/inspire.vue' /* webpackChunkName: "pages/inspire" */))
+const _30c3c80c = () => interopDefault(import('../../pages/recursos.vue' /* webpackChunkName: "pages/recursos" */))
 const _5ef111cb = () => interopDefault(import('../../pages/retina.vue' /* webpackChunkName: "pages/retina" */))
 const _058860d0 = () => interopDefault(import('../../pages/Administrador/nuevapelicula.vue' /* webpackChunkName: "pages/Administrador/nuevapelicula" */))
 const _42cd87f9 = () => interopDefault(import('../../pages/Administrador/salidas.vue' /* webpackChunkName: "pages/Administrador/salidas" */))
@@ -83,6 +84,10 @@ export function createRouter() {
       path: "/inspire",
       component: _3409365a,
       name: "inspire"
+    }, {
+      path: "/recursos",
+      component: _30c3c80c,
+      name: "recursos"
     }, {
       path: "/retina",
       component: _5ef111cb,

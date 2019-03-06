@@ -1,0 +1,2 @@
+exports.ids=[12],exports.modules={230:function(e,t,r){"use strict";r.r(t);var c=r(13),o={computed:{...Object(c.mapState)(["recursos"])}},d=r(9);var component=Object(d.a)(o,function(){var e=this.$createElement;return(this._self._c||e)("div",[this._ssrNode("<h1 data-v-e96ca446>Les recursés</h1> <pre data-v-e96ca446>"+this._ssrEscape(" "+this._s(this.recursos)+" ")+"</pre>")])},[],!1,function(e){},"e96ca446","2c0b5510");t.default=component.exports}};
+//# sourceMappingURL=7ae4bc1d359ffcd609ac.js.map
