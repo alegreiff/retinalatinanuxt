@@ -1,4 +1,14 @@
 import Vue from 'vue'
+
+import {
+  getMatchedComponentsInstances,
+  getChildrenComponentInstancesUsingFetch,
+  promisify,
+  globalHandleError,
+  sanitizeComponent
+} from './utils'
+
+import NuxtError from '../../layouts/error.vue'
 import NuxtLoading from './components/nuxt-loading.vue'
 
 import '../../assets/style/app.styl'
@@ -7,20 +17,30 @@ import '../../assets/sass/estilos.scss'
 
 import _6f6c098b from '../../layouts/default.vue'
 
-const layouts = { "_default": _6f6c098b }
+const layouts = { "_default": sanitizeComponent(_6f6c098b) }
 
 export default {
-  head: {"title":"inforetinalatina2020 : 0.9.9","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"Estadísticas Retina Latina 2020"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Roboto:300,400,500,700|Material+Icons"},{"rel":"stylesheet","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Days+One"}],"script":[{"src":"https:\u002F\u002Fwww.gstatic.com\u002Fcharts\u002Floader.js"},{"src":"\u002FcargaGoogleMap.js"}],"style":[]},
-
-  render(h, props) {
+  render (h, props) {
     const loadingEl = h('NuxtLoading', { ref: 'loading' })
+
+    if (this.nuxt.err && NuxtError) {
+      const errorLayout = (NuxtError.options || NuxtError).layout
+      if (errorLayout) {
+        this.setLayout(
+          typeof errorLayout === 'function'
+            ? errorLayout.call(NuxtError, this.context)
+            : errorLayout
+        )
+      }
+    }
+
     const layoutEl = h(this.layout || 'nuxt')
     const templateEl = h('div', {
       domProps: {
         id: '__layout'
       },
       key: this.layoutName
-    }, [ layoutEl ])
+    }, [layoutEl])
 
     const transitionEl = h('transition', {
       props: {
@@ -28,14 +48,14 @@ export default {
         mode: 'out-in'
       },
       on: {
-        beforeEnter(el) {
+        beforeEnter (el) {
           // Ensure to trigger scroll event after calling scrollBehavior
           window.$nuxt.$nextTick(() => {
             window.$nuxt.$emit('triggerScroll')
           })
         }
       }
-    }, [ templateEl ])
+    }, [templateEl])
 
     return h('div', {
       domProps: {
@@ -43,23 +63,30 @@ export default {
       }
     }, [
       loadingEl,
+
       transitionEl
     ])
   },
+
   data: () => ({
     isOnline: true,
+
     layout: null,
-    layoutName: ''
-  }),
-  beforeCreate() {
+    layoutName: '',
+
+    nbFetching: 0
+    }),
+
+  beforeCreate () {
     Vue.util.defineReactive(this, 'nuxt', this.$options.nuxt)
   },
-  created() {
+  created () {
     // Add this.$nuxt in child instances
     Vue.prototype.$nuxt = this
     // add to window so we can listen when ready
     if (process.client) {
       window.$nuxt = this
+
       this.refreshOnlineStatus()
       // Setup the listeners
       window.addEventListener('online', this.refreshOnlineStatus)
@@ -67,9 +94,11 @@ export default {
     }
     // Add $nuxt.error()
     this.error = this.nuxt.error
+    // Add $nuxt.context
+    this.context = this.$options.context
   },
 
-  mounted() {
+  mounted () {
     this.$loading = this.$refs.loading
   },
   watch: {
@@ -77,12 +106,17 @@ export default {
   },
 
   computed: {
-    isOffline() {
+    isOffline () {
       return !this.isOnline
+    },
+
+      isFetching() {
+      return this.nbFetching > 0
     }
   },
+
   methods: {
-    refreshOnlineStatus() {
+    refreshOnlineStatus () {
       if (process.client) {
         if (typeof window.navigator.onLine === 'undefined') {
           // If the browser doesn't support connection status reports
@@ -95,14 +129,69 @@ export default {
       }
     },
 
-    errorChanged() {
+    async refresh () {
+      const pages = getMatchedComponentsInstances(this.$route)
+
+      if (!pages.length) {
+        return
+      }
+      this.$loading.start()
+
+      const promises = pages.map((page) => {
+        const p = []
+
+        // Old fetch
+        if (page.$options.fetch && page.$options.fetch.length) {
+          p.push(promisify(page.$options.fetch, this.context))
+        }
+        if (page.$fetch) {
+          p.push(page.$fetch())
+        } else {
+          // Get all component instance to call $fetch
+          for (const component of getChildrenComponentInstancesUsingFetch(page.$vnode.componentInstance)) {
+            p.push(component.$fetch())
+          }
+        }
+
+        if (page.$options.asyncData) {
+          p.push(
+            promisify(page.$options.asyncData, this.context)
+              .then((newData) => {
+                for (const key in newData) {
+                  Vue.set(page.$data, key, newData[key])
+                }
+              })
+          )
+        }
+
+        return Promise.all(p)
+      })
+      try {
+        await Promise.all(promises)
+      } catch (error) {
+        this.$loading.fail(error)
+        globalHandleError(error)
+        this.error(error)
+      }
+      this.$loading.finish()
+    },
+
+    errorChanged () {
       if (this.nuxt.err && this.$loading) {
-        if (this.$loading.fail) this.$loading.fail()
-        if (this.$loading.finish) this.$loading.finish()
+        if (this.$loading.fail) {
+          this.$loading.fail(this.nuxt.err)
+        }
+        if (this.$loading.finish) {
+          this.$loading.finish()
+        }
       }
     },
 
-    setLayout(layout) {
+    setLayout (layout) {
+      if(layout && typeof layout !== 'string') {
+        throw new Error('[nuxt] Avoid using non-string value as layout property.')
+      }
+
       if (!layout || !layouts['_' + layout]) {
         layout = 'default'
       }
@@ -110,13 +199,14 @@ export default {
       this.layout = layouts['_' + layout]
       return this.layout
     },
-    loadLayout(layout) {
+    loadLayout (layout) {
       if (!layout || !layouts['_' + layout]) {
         layout = 'default'
       }
       return Promise.resolve(layouts['_' + layout])
     }
   },
+
   components: {
     NuxtLoading
   }

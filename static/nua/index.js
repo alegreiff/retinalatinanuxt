@@ -1,7 +1,8 @@
 import Vue from 'vue'
 import Meta from 'vue-meta'
+import ClientOnly from 'vue-client-only'
+import NoSsr from 'vue-no-ssr'
 import { createRouter } from './router.js'
-import NoSsr from './components/no-ssr.js'
 import NuxtChild from './components/nuxt-child.js'
 import NuxtError from '../../layouts/error.vue'
 import Nuxt from './components/nuxt.js'
@@ -11,16 +12,29 @@ import { createStore } from './store.js'
 
 /* Plugins */
 
-import nuxt_plugin_moment_304eeda4 from 'nuxt_plugin_moment_304eeda4' // Source: ./moment.js (mode: 'all')
-import nuxt_plugin_axios_a7aa84ac from 'nuxt_plugin_axios_a7aa84ac' // Source: ./axios.js (mode: 'all')
+import nuxt_plugin_moment_49c00c84 from 'nuxt_plugin_moment_49c00c84' // Source: ./moment.js (mode: 'all')
+import nuxt_plugin_axios_50eafb1a from 'nuxt_plugin_axios_50eafb1a' // Source: ./axios.js (mode: 'all')
 import nuxt_plugin_vuetify_e5914fcc from 'nuxt_plugin_vuetify_e5914fcc' // Source: ../../plugins/vuetify (mode: 'all')
 import nuxt_plugin_lodash_52e6a2ea from 'nuxt_plugin_lodash_52e6a2ea' // Source: ../../plugins/lodash (mode: 'all')
 import nuxt_plugin_componentescomunes_33611e04 from 'nuxt_plugin_componentescomunes_33611e04' // Source: ../../plugins/componentes_comunes (mode: 'all')
 import nuxt_plugin_filtros_983fef96 from 'nuxt_plugin_filtros_983fef96' // Source: ../../plugins/filtros (mode: 'all')
 import nuxt_plugin_funcionesglobales_21aa34b4 from 'nuxt_plugin_funcionesglobales_21aa34b4' // Source: ../../plugins/funciones_globales (mode: 'all')
 
-// Component: <NoSsr>
-Vue.component(NoSsr.name, NoSsr)
+// Component: <ClientOnly>
+Vue.component(ClientOnly.name, ClientOnly)
+
+// TODO: Remove in Nuxt 3: <NoSsr>
+Vue.component(NoSsr.name, {
+  ...NoSsr,
+  render (h, ctx) {
+    if (process.client && !NoSsr._warned) {
+      NoSsr._warned = true
+
+      console.warn('<no-ssr> has been deprecated and will be removed in Nuxt 3, please use <client-only> instead')
+    }
+    return NoSsr.render(h, ctx)
+  }
+})
 
 // Component: <NuxtChild>
 Vue.component(NuxtChild.name, NuxtChild)
@@ -28,20 +42,14 @@ Vue.component('NChild', NuxtChild)
 
 // Component NuxtLink is imported in server.js or client.js
 
-// Component: <Nuxt>`
+// Component: <Nuxt>
 Vue.component(Nuxt.name, Nuxt)
 
-// vue-meta configuration
-Vue.use(Meta, {
-  keyName: 'head', // the component option name that vue-meta looks for meta info on.
-  attribute: 'data-n-head', // the attribute name vue-meta adds to the tags it observes
-  ssrAttribute: 'data-n-head-ssr', // the attribute name that lets vue-meta know that meta info has already been server-rendered
-  tagIDKeyName: 'hid' // the property name that vue-meta uses to determine whether to overwrite or append a tag
-})
+Vue.use(Meta, {"keyName":"head","attribute":"data-n-head","ssrAttribute":"data-n-head-ssr","tagIDKeyName":"hid"})
 
 const defaultTransition = {"name":"page","mode":"out-in","appear":false,"appearClass":"appear","appearActiveClass":"appear-active","appearToClass":"appear-to"}
 
-async function createApp(ssrContext) {
+async function createApp (ssrContext) {
   const router = await createRouter(ssrContext)
 
   const store = createStore(ssrContext)
@@ -57,14 +65,16 @@ async function createApp(ssrContext) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    router,
+    head: {"title":"inforetinalatina2020 : 0.9.9","meta":[{"charset":"utf-8"},{"name":"viewport","content":"width=device-width, initial-scale=1"},{"hid":"description","name":"description","content":"Estadísticas Retina Latina 2020"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Roboto:300,400,500,700|Material+Icons"},{"rel":"stylesheet","href":"https:\u002F\u002Ffonts.googleapis.com\u002Fcss?family=Days+One"}],"script":[{"src":"https:\u002F\u002Fwww.gstatic.com\u002Fcharts\u002Floader.js"},{"src":"\u002FcargaGoogleMap.js"}],"style":[]},
+
     store,
+    router,
     nuxt: {
       defaultTransition,
-      transitions: [ defaultTransition ],
-      setTransitions(transitions) {
+      transitions: [defaultTransition],
+      setTransitions (transitions) {
         if (!Array.isArray(transitions)) {
-          transitions = [ transitions ]
+          transitions = [transitions]
         }
         transitions = transitions.map((transition) => {
           if (!transition) {
@@ -79,17 +89,23 @@ async function createApp(ssrContext) {
         this.$options.nuxt.transitions = transitions
         return transitions
       },
+
       err: null,
       dateErr: null,
-      error(err) {
+      error (err) {
         err = err || null
-        app.context._errored = !!err
+        app.context._errored = Boolean(err)
         err = err ? normalizeError(err) : null
-        const nuxt = this.nuxt || this.$options.nuxt
+        let nuxt = app.nuxt // to work with @vue/composition-api, see https://github.com/nuxt/nuxt.js/issues/6517#issuecomment-573280207
+        if (this) {
+          nuxt = this.nuxt || this.$options.nuxt
+        }
         nuxt.dateErr = Date.now()
         nuxt.err = err
         // Used in src/server.js
-        if (ssrContext) ssrContext.nuxt.error = err
+        if (ssrContext) {
+          ssrContext.nuxt.error = err
+        }
         return err
       }
     },
@@ -105,25 +121,31 @@ async function createApp(ssrContext) {
   if (ssrContext) {
     route = router.resolve(ssrContext.url).route
   } else {
-    const path = getLocation(router.options.base)
+    const path = getLocation(router.options.base, router.options.mode)
     route = router.resolve(path).route
   }
 
   // Set context to app.context
   await setContext(app, {
+    store,
     route,
     next,
     error: app.nuxt.error.bind(app),
-    store,
     payload: ssrContext ? ssrContext.payload : undefined,
     req: ssrContext ? ssrContext.req : undefined,
     res: ssrContext ? ssrContext.res : undefined,
-    beforeRenderFns: ssrContext ? ssrContext.beforeRenderFns : undefined
+    beforeRenderFns: ssrContext ? ssrContext.beforeRenderFns : undefined,
+    ssrContext
   })
 
   const inject = function (key, value) {
-    if (!key) throw new Error('inject(key, value) has no key provided')
-    if (typeof value === 'undefined') throw new Error('inject(key, value) has no value provided')
+    if (!key) {
+      throw new Error('inject(key, value) has no key provided')
+    }
+    if (value === undefined) {
+      throw new Error(`inject('${key}', value) has no value provided`)
+    }
+
     key = '$' + key
     // Add into app
     app[key] = value
@@ -133,13 +155,15 @@ async function createApp(ssrContext) {
 
     // Check if plugin not already installed
     const installKey = '__nuxt_' + key + '_installed__'
-    if (Vue[installKey]) return
+    if (Vue[installKey]) {
+      return
+    }
     Vue[installKey] = true
     // Call Vue.use() to install the plugin into vm
     Vue.use(() => {
-      if (!Vue.prototype.hasOwnProperty(key)) {
+      if (!Object.prototype.hasOwnProperty.call(Vue, key)) {
         Object.defineProperty(Vue.prototype, key, {
-          get() {
+          get () {
             return this.$root.$options[key]
           }
         })
@@ -156,13 +180,33 @@ async function createApp(ssrContext) {
 
   // Plugin execution
 
-  if (typeof nuxt_plugin_moment_304eeda4 === 'function') await nuxt_plugin_moment_304eeda4(app.context, inject)
-  if (typeof nuxt_plugin_axios_a7aa84ac === 'function') await nuxt_plugin_axios_a7aa84ac(app.context, inject)
-  if (typeof nuxt_plugin_vuetify_e5914fcc === 'function') await nuxt_plugin_vuetify_e5914fcc(app.context, inject)
-  if (typeof nuxt_plugin_lodash_52e6a2ea === 'function') await nuxt_plugin_lodash_52e6a2ea(app.context, inject)
-  if (typeof nuxt_plugin_componentescomunes_33611e04 === 'function') await nuxt_plugin_componentescomunes_33611e04(app.context, inject)
-  if (typeof nuxt_plugin_filtros_983fef96 === 'function') await nuxt_plugin_filtros_983fef96(app.context, inject)
-  if (typeof nuxt_plugin_funcionesglobales_21aa34b4 === 'function') await nuxt_plugin_funcionesglobales_21aa34b4(app.context, inject)
+  if (typeof nuxt_plugin_moment_49c00c84 === 'function') {
+    await nuxt_plugin_moment_49c00c84(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_axios_50eafb1a === 'function') {
+    await nuxt_plugin_axios_50eafb1a(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vuetify_e5914fcc === 'function') {
+    await nuxt_plugin_vuetify_e5914fcc(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_lodash_52e6a2ea === 'function') {
+    await nuxt_plugin_lodash_52e6a2ea(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_componentescomunes_33611e04 === 'function') {
+    await nuxt_plugin_componentescomunes_33611e04(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_filtros_983fef96 === 'function') {
+    await nuxt_plugin_filtros_983fef96(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_funcionesglobales_21aa34b4 === 'function') {
+    await nuxt_plugin_funcionesglobales_21aa34b4(app.context, inject)
+  }
 
   // If server-side, wait for async component to be resolved first
   if (process.server && ssrContext && ssrContext.url) {
@@ -182,8 +226,8 @@ async function createApp(ssrContext) {
   }
 
   return {
-    app,
     store,
+    app,
     router
   }
 }

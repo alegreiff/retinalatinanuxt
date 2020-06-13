@@ -1,135 +1,95 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import { interopDefault } from './utils'
+import scrollBehavior from './router.scrollBehavior.js'
 
-const _1381a140 = () => interopDefault(import('../../pages/Administrador/index.vue' /* webpackChunkName: "pages/Administrador/index" */))
-const _3409365a = () => interopDefault(import('../../pages/inspire.vue' /* webpackChunkName: "pages/inspire" */))
-const _30c3c80c = () => interopDefault(import('../../pages/recursos.vue' /* webpackChunkName: "pages/recursos" */))
-const _5ef111cb = () => interopDefault(import('../../pages/retina.vue' /* webpackChunkName: "pages/retina" */))
-const _058860d0 = () => interopDefault(import('../../pages/Administrador/nuevapelicula.vue' /* webpackChunkName: "pages/Administrador/nuevapelicula" */))
-const _42cd87f9 = () => interopDefault(import('../../pages/Administrador/salidas.vue' /* webpackChunkName: "pages/Administrador/salidas" */))
-const _47f4fb1a = () => interopDefault(import('../../pages/Estadisticas/base.vue' /* webpackChunkName: "pages/Estadisticas/base" */))
-const _ffe2ac2a = () => interopDefault(import('../../pages/Estadisticas/paises.vue' /* webpackChunkName: "pages/Estadisticas/paises" */))
-const _600f1170 = () => interopDefault(import('../../pages/Estadisticas/peliculas.vue' /* webpackChunkName: "pages/Estadisticas/peliculas" */))
-const _aa989f7a = () => interopDefault(import('../../pages/Estadisticas/peliculasmes.vue' /* webpackChunkName: "pages/Estadisticas/peliculasmes" */))
-const _3a3101c0 = () => interopDefault(import('../../pages/Estadisticas/publicadas.vue' /* webpackChunkName: "pages/Estadisticas/publicadas" */))
-const _6257054e = () => interopDefault(import('../../pages/Pais/_id/index.vue' /* webpackChunkName: "pages/Pais/_id/index" */))
-const _2f568a52 = () => interopDefault(import('../../pages/index.vue' /* webpackChunkName: "pages/index" */))
+const _4da560d0 = () => interopDefault(import('../../pages/Administrador/index.vue' /* webpackChunkName: "pages/Administrador/index" */))
+const _0ccbe06c = () => interopDefault(import('../../pages/inspire.vue' /* webpackChunkName: "pages/inspire" */))
+const _57af1eec = () => interopDefault(import('../../pages/recursos.vue' /* webpackChunkName: "pages/recursos" */))
+const _7fb16b4a = () => interopDefault(import('../../pages/retina.vue' /* webpackChunkName: "pages/retina" */))
+const _e3c3bb80 = () => interopDefault(import('../../pages/Administrador/nuevapelicula.vue' /* webpackChunkName: "pages/Administrador/nuevapelicula" */))
+const _596d1d69 = () => interopDefault(import('../../pages/Administrador/salidas.vue' /* webpackChunkName: "pages/Administrador/salidas" */))
+const _25ad603a = () => interopDefault(import('../../pages/Estadisticas/base.vue' /* webpackChunkName: "pages/Estadisticas/base" */))
+const _5116494a = () => interopDefault(import('../../pages/Estadisticas/paises.vue' /* webpackChunkName: "pages/Estadisticas/paises" */))
+const _e568e050 = () => interopDefault(import('../../pages/Estadisticas/peliculas.vue' /* webpackChunkName: "pages/Estadisticas/peliculas" */))
+const _d8a9e49a = () => interopDefault(import('../../pages/Estadisticas/peliculasmes.vue' /* webpackChunkName: "pages/Estadisticas/peliculasmes" */))
+const _60110ee0 = () => interopDefault(import('../../pages/Estadisticas/publicadas.vue' /* webpackChunkName: "pages/Estadisticas/publicadas" */))
+const _0e5db42e = () => interopDefault(import('../../pages/Pais/_id/index.vue' /* webpackChunkName: "pages/Pais/_id/index" */))
+const _092effc2 = () => interopDefault(import('../../pages/index.vue' /* webpackChunkName: "pages/index" */))
+
+// TODO: remove in Nuxt 3
+const emptyFn = () => {}
+const originalPush = Router.prototype.push
+Router.prototype.push = function push (location, onComplete = emptyFn, onAbort) {
+  return originalPush.call(this, location, onComplete, onAbort)
+}
 
 Vue.use(Router)
 
-if (process.client) {
-  window.history.scrollRestoration = 'manual'
+export const routerOptions = {
+  mode: 'history',
+  base: decodeURI('/'),
+  linkActiveClass: 'nuxt-link-active',
+  linkExactActiveClass: 'nuxt-link-exact-active',
+  scrollBehavior,
+
+  routes: [{
+    path: "/Administrador",
+    component: _4da560d0,
+    name: "Administrador"
+  }, {
+    path: "/inspire",
+    component: _0ccbe06c,
+    name: "inspire"
+  }, {
+    path: "/recursos",
+    component: _57af1eec,
+    name: "recursos"
+  }, {
+    path: "/retina",
+    component: _7fb16b4a,
+    name: "retina"
+  }, {
+    path: "/Administrador/nuevapelicula",
+    component: _e3c3bb80,
+    name: "Administrador-nuevapelicula"
+  }, {
+    path: "/Administrador/salidas",
+    component: _596d1d69,
+    name: "Administrador-salidas"
+  }, {
+    path: "/Estadisticas/base",
+    component: _25ad603a,
+    name: "Estadisticas-base"
+  }, {
+    path: "/Estadisticas/paises",
+    component: _5116494a,
+    name: "Estadisticas-paises"
+  }, {
+    path: "/Estadisticas/peliculas",
+    component: _e568e050,
+    name: "Estadisticas-peliculas"
+  }, {
+    path: "/Estadisticas/peliculasmes",
+    component: _d8a9e49a,
+    name: "Estadisticas-peliculasmes"
+  }, {
+    path: "/Estadisticas/publicadas",
+    component: _60110ee0,
+    name: "Estadisticas-publicadas"
+  }, {
+    path: "/Pais/:id?",
+    component: _0e5db42e,
+    name: "Pais-id"
+  }, {
+    path: "/",
+    component: _092effc2,
+    name: "index"
+  }],
+
+  fallback: false
 }
-const scrollBehavior = function (to, from, savedPosition) {
-  // if the returned position is falsy or an empty object,
-  // will retain current scroll position.
-  let position = false
 
-  // if no children detected and scrollToTop is not explicitly disabled
-  if (
-    to.matched.length < 2 &&
-    to.matched.every(r => r.components.default.options.scrollToTop !== false)
-  ) {
-    // scroll to the top of the page
-    position = { x: 0, y: 0 }
-  } else if (to.matched.some(r => r.components.default.options.scrollToTop)) {
-    // if one of the children has scrollToTop option set to true
-    position = { x: 0, y: 0 }
-  }
-
-  // savedPosition is only available for popstate navigations (back button)
-  if (savedPosition) {
-    position = savedPosition
-  }
-
-  return new Promise((resolve) => {
-    // wait for the out transition to complete (if necessary)
-    window.$nuxt.$once('triggerScroll', () => {
-      // coords will be used if no selector is provided,
-      // or if the selector didn't match any element.
-      if (to.hash) {
-        let hash = to.hash
-        // CSS.escape() is not supported with IE and Edge.
-        if (typeof window.CSS !== 'undefined' && typeof window.CSS.escape !== 'undefined') {
-          hash = '#' + window.CSS.escape(hash.substr(1))
-        }
-        try {
-          if (document.querySelector(hash)) {
-            // scroll to anchor by returning the selector
-            position = { selector: hash }
-          }
-        } catch (e) {
-          console.warn('Failed to save scroll position. Please add CSS.escape() polyfill (https://github.com/mathiasbynens/CSS.escape).')
-        }
-      }
-      resolve(position)
-    })
-  })
-}
-
-export function createRouter() {
-  return new Router({
-    mode: 'history',
-    base: '/',
-    linkActiveClass: 'nuxt-link-active',
-    linkExactActiveClass: 'nuxt-link-exact-active',
-    scrollBehavior,
-
-    routes: [{
-      path: "/Administrador",
-      component: _1381a140,
-      name: "Administrador"
-    }, {
-      path: "/inspire",
-      component: _3409365a,
-      name: "inspire"
-    }, {
-      path: "/recursos",
-      component: _30c3c80c,
-      name: "recursos"
-    }, {
-      path: "/retina",
-      component: _5ef111cb,
-      name: "retina"
-    }, {
-      path: "/Administrador/nuevapelicula",
-      component: _058860d0,
-      name: "Administrador-nuevapelicula"
-    }, {
-      path: "/Administrador/salidas",
-      component: _42cd87f9,
-      name: "Administrador-salidas"
-    }, {
-      path: "/Estadisticas/base",
-      component: _47f4fb1a,
-      name: "Estadisticas-base"
-    }, {
-      path: "/Estadisticas/paises",
-      component: _ffe2ac2a,
-      name: "Estadisticas-paises"
-    }, {
-      path: "/Estadisticas/peliculas",
-      component: _600f1170,
-      name: "Estadisticas-peliculas"
-    }, {
-      path: "/Estadisticas/peliculasmes",
-      component: _aa989f7a,
-      name: "Estadisticas-peliculasmes"
-    }, {
-      path: "/Estadisticas/publicadas",
-      component: _3a3101c0,
-      name: "Estadisticas-publicadas"
-    }, {
-      path: "/Pais/:id?",
-      component: _6257054e,
-      name: "Pais-id"
-    }, {
-      path: "/",
-      component: _2f568a52,
-      name: "index"
-    }],
-
-    fallback: false
-  })
+export function createRouter () {
+  return new Router(routerOptions)
 }

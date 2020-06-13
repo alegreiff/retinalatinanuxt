@@ -1,17 +1,12 @@
-
-const files = require.context('@/middleware', false, /^\.\/(?!-)[^.]+\.(js|mjs|ts)$/)
-const filenames = files.keys()
-
-function getModule(filename) {
-  const file = files(filename)
-  return file.default || file
-}
 const middleware = {}
 
-// Generate the middleware
-for (const filename of filenames) {
-  const name = filename.replace(/^\.\//, '').replace(/\.(js|mjs|ts)$/, '')
-  middleware[name] = getModule(filename)
-}
+middleware['auth'] = require('../../middleware/auth.js')
+middleware['auth'] = middleware['auth'].default || middleware['auth']
+
+middleware['check-auth'] = require('../../middleware/check-auth.js')
+middleware['check-auth'] = middleware['check-auth'].default || middleware['check-auth']
+
+middleware['inicioAdmin'] = require('../../middleware/inicioAdmin.js')
+middleware['inicioAdmin'] = middleware['inicioAdmin'].default || middleware['inicioAdmin']
 
 export default middleware
